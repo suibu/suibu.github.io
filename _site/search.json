@@ -1,0 +1,13 @@
+[
+  
+    {
+      "title"       : "vim",
+      "category"    : "opinion",
+      "tags"        : "tool",
+      "url"         : "./vim.html",
+      "date"        : "2021-06-30 00:00:00 +0800",
+      "description" : "vim 教程 学习笔记",
+      "content"     : "为什么想要熟练使用vim使用总结新增删除编辑"
+    } 
+  
+]
