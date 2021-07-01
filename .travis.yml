@@ -1,0 +1,30 @@
+source "https://rubygems.org"
+
+gem "jekyll"
+gem "html-proofer"
+
+language: ruby
+rvm:
+- 2.1
+# 假如 bundler 被使用，安装时将运行 `bundle install`.
+script: ./script/cibuild
+
+# 分支白名单
+branches:
+  only:
+  - gh-pages     # 测试 gh-pages 分支
+  - /pages-(.*)/ # 测试每一个以 "pages-" 开头的分支
+
+env:
+  global:
+  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+
+
+after_success:
+- git clone https://github.com/suibu/suibu.github.io.git
+- cd suibu.github.io && rm -rf * && cp -r ../_site/* .
+- git config user.name "suibu"
+- git config user.email "walk-liuyan@outlook.com"
+- git add --all .
+- git commit -m "Travis CI Auto Builder"
+- git push --force https://$DEPLOY_TOKEN@github.com/xxxx/blog.git master
