@@ -1,13 +1,43 @@
 [
   
     {
+      "title"       : "",
+      "category"    : "",
+      "tags"        : "",
+      "url"         : "./2021-07-04-%E8%84%9A%E6%89%8B%E6%9E%B6%E5%8E%9F%E7%90%86.html",
+      "date"        : "2021-07-06 20:49:57 +0800",
+      "description" : "",
+      "content"     : "为什么全局安装 @vue/cli 会可以使用vue进行建项目？➜ ~ npm i -g @vue/cli➜ ~ which vue/Users/liuyan/.nvm/versions/node/v14.16.0/bin/vue# bin 代表可执行文件➜ ~ cd /Users/liuyan/.nvm/versions/node/v14.16.0/bin &amp;&amp; lltotal 144600lrwxr-xr-x 1 liuyan staff 39B 7 4 19:10 vue -&gt; ../lib/node_modules/@vue/cli/bin/vue.js// lrwxr头部的l代表软链接// 执行vue后，实际实行的是../lib/node_modules/@vue/cli/bin/vue.js 文件➜ bin git:(e1c84ba) ✗ cd ../lib/node_modules/@vue/cli➜ cli git:(e1c84ba) ✗ lsLICENSE README.md bin lib node_modules package.json types➜ cli git:(e1c84ba) ✗ vim package.json找到bin这个属性，根据 npm 文档 bin 的解释说明，该字段用于命令名与本地执行文件的映射。执行vue，实际是去执行@vue/cli文件夹下的bin/vue.js\"bin\": { \"vue\": \"bin/vue.js\"},全局安装 @vue/cli 发生了什么1、将包文件下载到/Users/liuyan/.nvm/versions/node/v14.16.0/lib/node-modules下2、解析package.json中的bin，若发现有bin相关的配置，会到/Users/liuyan/.nvm/versions/node/v14.16.0/bin下创建一个软链接命令名称 -&gt; 具体执行的文件执行vue命令时发生了什么，为什么可以通过vue去执行这个文件1、执行 vue 命令时，变相的是执行 /Users/liuyan/.nvm/versions/node/v14.16.0/bin/vue，同时是去实行了package.json中bin指向的真实文件。2、本身js若是没有解释器是无法被运行的。➜ suibu touch test.js➜ suibu test.jszsh: command not found: test.js所以要在文件中写入#!/usr/bin/env nodeconsole.lgo('bili')/usr/bin/env 是所有的环境变量，在NVM_BIN=/Users/liuyan/.nvm/versions/node/v14.16.0/bin中就有node命令如果在文件中写入#!/usr/bin/env node，等价于 node test.js创建一个全局命令1、找到电脑中所有的环境变量➜ suibu echo $PATH/Users/liuyan/.gem/ruby/2.6.0/bin:~/.composer/vendor/bin:/Users/liuyan/.nvm/versions/node/v14.16.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin2、在这些环境变量中创建软链接➜ suibu cd /Users/liuyan/.nvm/versions/node/v14.16.0/bin# 创建软链接➜ bin git:(e1c84ba) ✗ ln -s /Users/liuyan/suibu/test.js suibu-command➜ bin git:(e1c84ba) ✗ lltotal 144600lrwxr-xr-x 1 liuyan staff 27B 7 4 20:08 suibu-command -&gt; /Users/liuyan/suibu/test.js然后随便找个路径执行它➜ ~ /Users/liuyan/suibu/test.jszsh: permission denied: /Users/liuyan/suibu/test.js# 若是告诉你没有权限访问：敲入命令 chmod 去添加可执行权限➜ ~ cd /Users/liuyan/suibu &amp;&amp; chmod 777 test.js如何给本地脚手架取别名➜ ~ which vue/Users/liuyan/.nvm/versions/node/v14.16.0/bin/vue➜ ~ /Users/liuyan/.nvm/versions/node/v14.16.0/bin➜ bin git:(e1c84ba) ✗ lltotal 144600lrwxr-xr-x 1 liuyan staff 39B 7 4 19:10 vue -&gt; ../lib/node_modules/@vue/cli/➜ bin git:(e1c84ba) ✗ ln -s ./vue vue2➜ bin git:(e1c84ba) ✗ ~➜ ~ vue2Usage: vue2 &lt;command&gt; [options]在命令行窗口敲入vue create vue-test-app后，OS做了什么？1、去$PATH寻找有没有你输入的命令，等价于：which vue2、若找到了相关的软链接，便找到实在的lib/可执行文件3、通过解释器node去执行lib/**.js本地调试脚手架npm link将当前项目链接到node全局 node_modules 中作为一个库文件，并解析bin配置，创建软链npm unlink移除上述软链npm link 库名将当前项目中 node_modules指定的库名链接到node全局node_modules下的库文件npm unlink 库名移除本项目中对该库的软链"
+    } ,
+  
+    {
+      "title"       : "lerna工作流程",
+      "category"    : "opinion",
+      "tags"        : "node",
+      "url"         : "./lerna%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.html",
+      "date"        : "2021-07-05 00:00:00 +0800",
+      "description" : "lerna工作流程",
+      "content"     : "lerna 的体验为什么使用 lerna工程化思想的两个维度：1、大幅减少重复操作 2、提升操作的标准化。以效能为核心。脚手架项目初始化1、 初始化npm项目mkdir fe-cli &amp;&amp; cd fe-clinpm init -y2、 安装lenrnayarn add lerna -D3、 lerna init 初始化项目将会在该文件夹下生成 packages文件夹、lerna.jsonlerna init创建 package1、lerna create 创建 packagelerna create core会在packages下创建名为core的npm包2、lerna add 安装依赖lerna add react 将会把 react 安装进 packages 下所有的包中lerna add react packages/core 将会把 react 安装进指定的 packages/包中https://github.com/lerna/lerna/tree/main/commands/add#readme3、lerna link 链接依赖完成内部文件的相互依赖，会为你生成软链lrwxr-xr-x 1 liuyan staff 14B 7 6 16:09 utils -&gt; ../../../utils脚手架开发和测试1、lerna exec 执行 shell 脚本可以为你批量执行shell脚本(也可以指定scope)lerna exec – rm -rf node_modules/2、lerna run 执行 npm 命令lerna run test 批量执行packages中的test命令3、lerna clean 清空依赖清除 packages 下所有的 node_modules4、lerna bootstrap 重装依赖将原本 package.json 中记录的依赖重新安装脚手架的发布上线1、lerna version2、lerna changed查看哪些包有了改动3、lerna diffcommit之间的diff对比4、lerna publishlerna 源码学习1、入口文件#!/usr/bin/env node\"use strict\";/* eslint-disable import/no-dynamic-require, global-require */const importLocal = require(\"import-local\");if (importLocal(__filename)) { require(\"npmlog\").info(\"cli\", \"using local version of lerna\");} else { require(\".\")(process.argv.slice(2)); // require(\".\") 中的 . 等价于 ./ 又等价与 ./index.js}2、进入 require(“.”) 对应的index.js\"use strict\";// 代码的运行是一行一行往下的，会一条一条解析require文件const cli = require(\"@lerna/cli\");const addCmd = require(\"@lerna/add/command\");const publishCmd = require(\"@lerna/publish/command\");const versionCmd = require(\"@lerna/version/command\");const pkg = require(\"./package.json\");module.exports = main;function main(argv) { const context = { lernaVersion: pkg.version, };// 可以看出这是使用设计模式：构造者。对一个对象不断调用自身方法，并且在返回自身，不断壮大自己。 return cli() .command(addCmd) .command(publishCmd) .command(versionCmd) .parse(argv, context);}3、若是在packages内部的包相互使用，更轻松的安装方式//在某个包中使用另一个分包 \"dependencies\": { \"@lerna/command\": \"file:../../core/command\" }"
+    } ,
+  
+    {
+      "title"       : "git",
+      "category"    : "opinion",
+      "tags"        : "tool",
+      "url"         : "./git.html",
+      "date"        : "2021-07-05 00:00:00 +0800",
+      "description" : "git 常用操作 教程 学习笔记",
+      "content"     : "将commit从功能分支中移除➜ suibu.github.io git:(master) git revert commitID将commit放入功能分支➜ suibu.github.io git:(master) git cherry-pick commitID➜ suibu.github.io git:(master) git add .➜ suibu.github.io git:(master) git commit -m \"message...\"合并多个commitgit rebase --interactive --keep-empty commitID# 解决完冲突后git add .## 无需执行 git commitgit rebase --continue"
+    } ,
+  
+    {
       "title"       : "vim",
       "category"    : "opinion",
       "tags"        : "tool",
       "url"         : "./vim.html",
       "date"        : "2021-06-30 00:00:00 +0800",
       "description" : "vim 教程 学习笔记",
-      "content"     : "为什么想要熟练使用vim使用总结新增删除编辑"
+      "content"     : "新增删除编辑"
     } 
   
 ]

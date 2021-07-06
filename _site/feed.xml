@@ -1,5 +1,234 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://suibu.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://suibu.github.io/" rel="alternate" type="text/html" /><updated>2021-07-03T12:26:32+08:00</updated><id>https://suibu.github.io/feed.xml</id><title type="html">SUIBU’s BLOG</title><subtitle>a little knowledge is a dangerous thing.</subtitle><author><name>SuiBu</name></author><entry><title type="html">vim</title><link href="https://suibu.github.io/vim.html" rel="alternate" type="text/html" title="vim" /><published>2021-06-30T00:00:00+08:00</published><updated>2021-06-30T00:00:00+08:00</updated><id>https://suibu.github.io/vim</id><content type="html" xml:base="https://suibu.github.io/vim.html">&lt;h4 id=&quot;为什么想要熟练使用vim&quot;&gt;为什么想要熟练使用vim&lt;/h4&gt;
-&lt;h4 id=&quot;使用总结&quot;&gt;使用总结&lt;/h4&gt;
-&lt;h5 id=&quot;新增&quot;&gt;新增&lt;/h5&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://suibu.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://suibu.github.io/" rel="alternate" type="text/html" /><updated>2021-07-06T20:49:57+08:00</updated><id>https://suibu.github.io/feed.xml</id><title type="html">SUIBU’s BLOG</title><subtitle>a little knowledge is a dangerous thing.</subtitle><author><name>SuiBu</name></author><entry><title type="html"></title><link href="https://suibu.github.io/2021-07-04-%E8%84%9A%E6%89%8B%E6%9E%B6%E5%8E%9F%E7%90%86.html" rel="alternate" type="text/html" title="" /><published>2021-07-06T20:49:57+08:00</published><updated>2021-07-06T20:49:57+08:00</updated><id>https://suibu.github.io/2021-07-04-%E8%84%9A%E6%89%8B%E6%9E%B6%E5%8E%9F%E7%90%86</id><content type="html" xml:base="https://suibu.github.io/2021-07-04-%E8%84%9A%E6%89%8B%E6%9E%B6%E5%8E%9F%E7%90%86.html">&lt;h4 id=&quot;为什么全局安装-vuecli-会可以使用vue进行建项目&quot;&gt;为什么全局安装 @vue/cli 会可以使用vue进行建项目？&lt;/h4&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;➜  ~ npm i -g @vue/cli
+➜  ~ which vue
+/Users/liuyan/.nvm/versions/node/v14.16.0/bin/vue
+# bin 代表可执行文件
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+➜  ~ cd /Users/liuyan/.nvm/versions/node/v14.16.0/bin &amp;amp;&amp;amp; ll
+total 144600
+lrwxr-xr-x  1 liuyan  staff    39B  7  4 19:10 vue -&amp;gt; ../lib/node_modules/@vue/cli/bin/vue.js
+// lrwxr头部的l代表软链接
+// 执行vue后，实际实行的是../lib/node_modules/@vue/cli/bin/vue.js 文件
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+➜  bin git:(e1c84ba) ✗ cd ../lib/node_modules/@vue/cli
+➜  cli git:(e1c84ba) ✗ ls
+LICENSE      README.md    bin          lib          node_modules package.json types
+➜  cli git:(e1c84ba) ✗ vim package.json
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;找到bin这个属性，根据 &lt;a href=&quot;https://docs.npmjs.com/cli/v6/configuring-npm/package-json#bin&quot;&gt;npm 文档 bin 的解释说明&lt;/a&gt;，该字段用于命令名与本地执行文件的映射。执行vue，实际是去执行@vue/cli文件夹下的bin/vue.js&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;bin&quot;: {
+    &quot;vue&quot;: &quot;bin/vue.js&quot;
+},
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;全局安装-vuecli-发生了什么&quot;&gt;全局安装 @vue/cli 发生了什么&lt;/h4&gt;
+&lt;p&gt;1、将包文件下载到/Users/liuyan/.nvm/versions/node/v14.16.0/lib/node-modules下
+2、解析package.json中的bin，若发现有bin相关的配置，会到/Users/liuyan/.nvm/versions/node/v14.16.0/bin下创建一个软链接
+命令名称 -&amp;gt; 具体执行的文件&lt;/p&gt;
+
+&lt;h4 id=&quot;执行vue命令时发生了什么为什么可以通过vue去执行这个文件&quot;&gt;执行vue命令时发生了什么，为什么可以通过vue去执行这个文件&lt;/h4&gt;
+
+&lt;p&gt;1、执行 vue 命令时，变相的是执行 /Users/liuyan/.nvm/versions/node/v14.16.0/bin/vue，同时是去实行了package.json中bin指向的真实文件。
+2、本身js若是没有解释器是无法被运行的。&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;➜  suibu touch test.js
+➜  suibu test.js
+zsh: command not found: test.js
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;所以要在文件中写入&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#!/usr/bin/env node
+console.lgo('bili')
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;/usr/bin/env 是所有的环境变量，在
+NVM_BIN=/Users/liuyan/.nvm/versions/node/v14.16.0/bin中就有node命令
+如果在文件中写入#!/usr/bin/env node，等价于 node test.js&lt;/p&gt;
+
+&lt;h4 id=&quot;创建一个全局命令&quot;&gt;创建一个全局命令&lt;/h4&gt;
+
+&lt;p&gt;1、找到电脑中所有的环境变量&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;➜  suibu echo $PATH
+
+/Users/liuyan/.gem/ruby/2.6.0/bin:~/.composer/vendor/bin:/Users/liuyan/.nvm/versions/node/v14.16.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;2、在这些环境变量中创建软链接&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;➜  suibu cd /Users/liuyan/.nvm/versions/node/v14.16.0/bin
+
+# 创建软链接
+➜  bin git:(e1c84ba) ✗ ln -s /Users/liuyan/suibu/test.js suibu-command
+➜  bin git:(e1c84ba) ✗ ll
+total 144600
+lrwxr-xr-x  1 liuyan  staff    27B  7  4 20:08 suibu-command -&amp;gt; /Users/liuyan/suibu/test.js
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;然后随便找个路径执行它&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;➜  ~ /Users/liuyan/suibu/test.js
+zsh: permission denied: /Users/liuyan/suibu/test.js
+# 若是告诉你没有权限访问：敲入命令 chmod 去添加可执行权限
+➜  ~ cd /Users/liuyan/suibu &amp;amp;&amp;amp; chmod 777 test.js
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;如何给本地脚手架取别名&quot;&gt;如何给本地脚手架取别名&lt;/h4&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;➜  ~ which vue
+/Users/liuyan/.nvm/versions/node/v14.16.0/bin/vue
+➜  ~ /Users/liuyan/.nvm/versions/node/v14.16.0/bin
+➜  bin git:(e1c84ba) ✗ ll
+total 144600
+lrwxr-xr-x  1 liuyan  staff    39B  7  4 19:10 vue -&amp;gt; ../lib/node_modules/@vue/cli/
+➜  bin git:(e1c84ba) ✗ ln -s ./vue vue2
+➜  bin git:(e1c84ba) ✗ ~
+➜  ~ vue2
+Usage: vue2 &amp;lt;command&amp;gt; [options]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;在命令行窗口敲入vue-create-vue-test-app后os做了什么&quot;&gt;在命令行窗口敲入vue create vue-test-app后，OS做了什么？&lt;/h4&gt;
+&lt;p&gt;1、去$PATH寻找有没有你输入的命令，等价于：which vue
+2、若找到了相关的软链接，便找到实在的lib/可执行文件
+3、通过解释器node去执行lib/**.js&lt;/p&gt;
+
+&lt;h3 id=&quot;本地调试脚手架&quot;&gt;本地调试脚手架&lt;/h3&gt;
+
+&lt;p&gt;npm link
+将当前项目链接到node全局 node_modules 中作为一个库文件，并解析bin配置，创建软链
+npm unlink
+移除上述软链&lt;/p&gt;
+
+&lt;p&gt;npm link 库名
+将当前项目中 node_modules指定的库名链接到node全局node_modules下的库文件
+npm unlink 库名
+移除本项目中对该库的软链&lt;/p&gt;</content><author><name>SuiBu</name></author></entry><entry><title type="html">git</title><link href="https://suibu.github.io/git.html" rel="alternate" type="text/html" title="git" /><published>2021-07-05T00:00:00+08:00</published><updated>2021-07-05T00:00:00+08:00</updated><id>https://suibu.github.io/git</id><content type="html" xml:base="https://suibu.github.io/git.html">&lt;h5 id=&quot;将commit从功能分支中移除&quot;&gt;将commit从功能分支中移除&lt;/h5&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;➜  suibu.github.io git:(master) git revert commitID
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h5 id=&quot;将commit放入功能分支&quot;&gt;将commit放入功能分支&lt;/h5&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;➜  suibu.github.io git:(master) git cherry-pick commitID
+➜  suibu.github.io git:(master) git add .
+➜  suibu.github.io git:(master) git commit -m &quot;message...&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;合并多个commit&quot;&gt;合并多个commit&lt;/h5&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git rebase --interactive --keep-empty commitID
+# 解决完冲突后
+git add .
+## 无需执行 git commit
+git rebase --continue
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>随步</name></author><category term="opinion" /><category term="tool" /><summary type="html">将commit从功能分支中移除 ➜ suibu.github.io git:(master) git revert commitID 将commit放入功能分支 ➜ suibu.github.io git:(master) git cherry-pick commitID ➜ suibu.github.io git:(master) git add . ➜ suibu.github.io git:(master) git commit -m &quot;message...&quot;</summary></entry><entry><title type="html">lerna工作流程</title><link href="https://suibu.github.io/lerna%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.html" rel="alternate" type="text/html" title="lerna工作流程" /><published>2021-07-05T00:00:00+08:00</published><updated>2021-07-05T00:00:00+08:00</updated><id>https://suibu.github.io/lerna%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B</id><content type="html" xml:base="https://suibu.github.io/lerna%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.html">&lt;h3 id=&quot;lerna-的体验&quot;&gt;lerna 的体验&lt;/h3&gt;
+
+&lt;h4 id=&quot;为什么使用-lerna&quot;&gt;为什么使用 lerna&lt;/h4&gt;
+
+&lt;p&gt;工程化思想的两个维度：1、大幅减少重复操作 2、提升操作的标准化。以效能为核心。&lt;/p&gt;
+
+&lt;h4 id=&quot;脚手架项目初始化&quot;&gt;脚手架项目初始化&lt;/h4&gt;
+
+&lt;p&gt;1、 初始化npm项目&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir fe-cli &amp;amp;&amp;amp; cd fe-cli
+npm init -y
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;2、 安装lenrna&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yarn add lerna -D
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;3、 lerna init 初始化项目
+将会在该文件夹下生成 packages文件夹、lerna.json&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lerna init
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;创建-package&quot;&gt;创建 package&lt;/h4&gt;
+
+&lt;p&gt;1、lerna create 创建 package&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lerna create core
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;会在packages下创建名为core的npm包
+2、lerna add 安装依赖&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lerna add react 将会把 react 安装进 packages 下所有的包中
+lerna add react packages/core 将会把 react 安装进指定的 packages/包中
+https://github.com/lerna/lerna/tree/main/commands/add#readme
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;3、lerna link 链接依赖
+完成内部文件的相互依赖，会为你生成软链&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lrwxr-xr-x  1 liuyan  staff    14B  7  6 16:09 utils -&amp;gt; ../../../utils
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;脚手架开发和测试&quot;&gt;脚手架开发和测试&lt;/h4&gt;
+
+&lt;p&gt;1、lerna exec 执行 shell 脚本&lt;/p&gt;
+
+&lt;p&gt;可以为你批量执行shell脚本(也可以指定scope)
+lerna exec – rm -rf node_modules/
+2、lerna run 执行 npm 命令
+lerna run test 批量执行packages中的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;test&lt;/code&gt;命令&lt;/p&gt;
+
+&lt;p&gt;3、lerna clean 清空依赖
+清除 packages 下所有的 node_modules&lt;/p&gt;
+
+&lt;p&gt;4、lerna bootstrap 重装依赖
+将原本 package.json 中记录的依赖重新安装&lt;/p&gt;
+
+&lt;h4 id=&quot;脚手架的发布上线&quot;&gt;脚手架的发布上线&lt;/h4&gt;
+
+&lt;p&gt;1、lerna version&lt;/p&gt;
+
+&lt;p&gt;2、lerna changed
+查看哪些包有了改动&lt;/p&gt;
+
+&lt;p&gt;3、lerna diff
+commit之间的diff对比&lt;/p&gt;
+
+&lt;p&gt;4、lerna publish&lt;/p&gt;
+
+&lt;h3 id=&quot;lerna-源码学习&quot;&gt;lerna 源码学习&lt;/h3&gt;
+
+&lt;p&gt;1、入口文件&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#!/usr/bin/env node
+
+&quot;use strict&quot;;
+
+/* eslint-disable import/no-dynamic-require, global-require */
+const importLocal = require(&quot;import-local&quot;);
+
+if (importLocal(__filename)) {
+  require(&quot;npmlog&quot;).info(&quot;cli&quot;, &quot;using local version of lerna&quot;);
+} else {
+  require(&quot;.&quot;)(process.argv.slice(2));
+  // require(&quot;.&quot;) 中的 . 等价于 ./ 又等价与 ./index.js
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;2、进入 require(“.”) 对应的index.js&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;use strict&quot;;
+// 代码的运行是一行一行往下的，会一条一条解析require文件
+const cli = require(&quot;@lerna/cli&quot;);
+
+const addCmd = require(&quot;@lerna/add/command&quot;);
+const publishCmd = require(&quot;@lerna/publish/command&quot;);
+const versionCmd = require(&quot;@lerna/version/command&quot;);
+
+const pkg = require(&quot;./package.json&quot;);
+
+module.exports = main;
+
+function main(argv) {
+  const context = {
+    lernaVersion: pkg.version,
+  };
+
+// 可以看出这是使用设计模式：构造者。对一个对象不断调用自身方法，并且在返回自身，不断壮大自己。
+  return cli()
+    .command(addCmd)
+    .command(publishCmd)
+    .command(versionCmd)
+    .parse(argv, context);
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;3、若是在packages内部的包相互使用，更轻松的安装方式&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//在某个包中使用另一个分包
+ &quot;dependencies&quot;: {
+    &quot;@lerna/command&quot;: &quot;file:../../core/command&quot;
+ }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>随步</name></author><category term="opinion" /><category term="node" /><summary type="html">lerna 的体验</summary></entry><entry><title type="html">vim</title><link href="https://suibu.github.io/vim.html" rel="alternate" type="text/html" title="vim" /><published>2021-06-30T00:00:00+08:00</published><updated>2021-06-30T00:00:00+08:00</updated><id>https://suibu.github.io/vim</id><content type="html" xml:base="https://suibu.github.io/vim.html">&lt;h5 id=&quot;新增&quot;&gt;新增&lt;/h5&gt;
 &lt;h5 id=&quot;删除&quot;&gt;删除&lt;/h5&gt;
-&lt;h5 id=&quot;编辑&quot;&gt;编辑&lt;/h5&gt;</content><author><name>随步</name></author><category term="opinion" /><category term="tool" /><summary type="html">为什么想要熟练使用vim 使用总结 新增 删除 编辑</summary></entry></feed>
+&lt;h5 id=&quot;编辑&quot;&gt;编辑&lt;/h5&gt;</content><author><name>随步</name></author><category term="opinion" /><category term="tool" /><summary type="html">新增 删除 编辑</summary></entry></feed>

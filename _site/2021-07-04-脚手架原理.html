@@ -1,0 +1,103 @@
+<h4 id="为什么全局安装-vuecli-会可以使用vue进行建项目">为什么全局安装 @vue/cli 会可以使用vue进行建项目？</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>➜  ~ npm i -g @vue/cli
+➜  ~ which vue
+/Users/liuyan/.nvm/versions/node/v14.16.0/bin/vue
+# bin 代表可执行文件
+
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+➜  ~ cd /Users/liuyan/.nvm/versions/node/v14.16.0/bin &amp;&amp; ll
+total 144600
+lrwxr-xr-x  1 liuyan  staff    39B  7  4 19:10 vue -&gt; ../lib/node_modules/@vue/cli/bin/vue.js
+// lrwxr头部的l代表软链接
+// 执行vue后，实际实行的是../lib/node_modules/@vue/cli/bin/vue.js 文件
+
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+➜  bin git:(e1c84ba) ✗ cd ../lib/node_modules/@vue/cli
+➜  cli git:(e1c84ba) ✗ ls
+LICENSE      README.md    bin          lib          node_modules package.json types
+➜  cli git:(e1c84ba) ✗ vim package.json
+
+</code></pre></div></div>
+<p>找到bin这个属性，根据 <a href="https://docs.npmjs.com/cli/v6/configuring-npm/package-json#bin">npm 文档 bin 的解释说明</a>，该字段用于命令名与本地执行文件的映射。执行vue，实际是去执行@vue/cli文件夹下的bin/vue.js</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"bin": {
+    "vue": "bin/vue.js"
+},
+</code></pre></div></div>
+
+<h4 id="全局安装-vuecli-发生了什么">全局安装 @vue/cli 发生了什么</h4>
+<p>1、将包文件下载到/Users/liuyan/.nvm/versions/node/v14.16.0/lib/node-modules下
+2、解析package.json中的bin，若发现有bin相关的配置，会到/Users/liuyan/.nvm/versions/node/v14.16.0/bin下创建一个软链接
+命令名称 -&gt; 具体执行的文件</p>
+
+<h4 id="执行vue命令时发生了什么为什么可以通过vue去执行这个文件">执行vue命令时发生了什么，为什么可以通过vue去执行这个文件</h4>
+
+<p>1、执行 vue 命令时，变相的是执行 /Users/liuyan/.nvm/versions/node/v14.16.0/bin/vue，同时是去实行了package.json中bin指向的真实文件。
+2、本身js若是没有解释器是无法被运行的。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>➜  suibu touch test.js
+➜  suibu test.js
+zsh: command not found: test.js
+</code></pre></div></div>
+<p>所以要在文件中写入</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/usr/bin/env node
+console.lgo('bili')
+</code></pre></div></div>
+<p>/usr/bin/env 是所有的环境变量，在
+NVM_BIN=/Users/liuyan/.nvm/versions/node/v14.16.0/bin中就有node命令
+如果在文件中写入#!/usr/bin/env node，等价于 node test.js</p>
+
+<h4 id="创建一个全局命令">创建一个全局命令</h4>
+
+<p>1、找到电脑中所有的环境变量</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>➜  suibu echo $PATH
+
+/Users/liuyan/.gem/ruby/2.6.0/bin:~/.composer/vendor/bin:/Users/liuyan/.nvm/versions/node/v14.16.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+</code></pre></div></div>
+<p>2、在这些环境变量中创建软链接</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>➜  suibu cd /Users/liuyan/.nvm/versions/node/v14.16.0/bin
+
+# 创建软链接
+➜  bin git:(e1c84ba) ✗ ln -s /Users/liuyan/suibu/test.js suibu-command
+➜  bin git:(e1c84ba) ✗ ll
+total 144600
+lrwxr-xr-x  1 liuyan  staff    27B  7  4 20:08 suibu-command -&gt; /Users/liuyan/suibu/test.js
+</code></pre></div></div>
+<p>然后随便找个路径执行它</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>➜  ~ /Users/liuyan/suibu/test.js
+zsh: permission denied: /Users/liuyan/suibu/test.js
+# 若是告诉你没有权限访问：敲入命令 chmod 去添加可执行权限
+➜  ~ cd /Users/liuyan/suibu &amp;&amp; chmod 777 test.js
+</code></pre></div></div>
+
+<h4 id="如何给本地脚手架取别名">如何给本地脚手架取别名</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>➜  ~ which vue
+/Users/liuyan/.nvm/versions/node/v14.16.0/bin/vue
+➜  ~ /Users/liuyan/.nvm/versions/node/v14.16.0/bin
+➜  bin git:(e1c84ba) ✗ ll
+total 144600
+lrwxr-xr-x  1 liuyan  staff    39B  7  4 19:10 vue -&gt; ../lib/node_modules/@vue/cli/
+➜  bin git:(e1c84ba) ✗ ln -s ./vue vue2
+➜  bin git:(e1c84ba) ✗ ~
+➜  ~ vue2
+Usage: vue2 &lt;command&gt; [options]
+</code></pre></div></div>
+
+<h4 id="在命令行窗口敲入vue-create-vue-test-app后os做了什么">在命令行窗口敲入vue create vue-test-app后，OS做了什么？</h4>
+<p>1、去$PATH寻找有没有你输入的命令，等价于：which vue
+2、若找到了相关的软链接，便找到实在的lib/可执行文件
+3、通过解释器node去执行lib/**.js</p>
+
+<h3 id="本地调试脚手架">本地调试脚手架</h3>
+
+<p>npm link
+将当前项目链接到node全局 node_modules 中作为一个库文件，并解析bin配置，创建软链
+npm unlink
+移除上述软链</p>
+
+<p>npm link 库名
+将当前项目中 node_modules指定的库名链接到node全局node_modules下的库文件
+npm unlink 库名
+移除本项目中对该库的软链</p>
