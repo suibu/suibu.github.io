@@ -2,7 +2,7 @@
 layout: post
 read_time: true
 show_date: true
-title: 'yargs工作流程'
+title: 'import-local的工作流程'
 date: 2021-07-05
 img: posts/20210705/4.jpg
 tags: [node,cli]
@@ -18,7 +18,8 @@ description: 'import-local'
 const importLocal = require('import-local');
 /*
  __filename 等价于 which 包名，例如 which lerna， 返回的地址，会有软链接映射到本地的文件
- 如果importLocal(__filename)返回true，会优先加载本地版本
+ 如果importLocal(__filename)返回true，说明本地已经安装了npm官网的依赖包；
+							返回false，说明本地并没有安装filename的npm包，那么就可以debug进入自己的npm包
 */
 if (importLocal(__filename)) {
 	console.log('Using local version of this package');
